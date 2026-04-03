@@ -1,9 +1,9 @@
 {
   "version": "2.6.0",
   "summary": {
-    "title": "New Threat Model",
-    "owner": "RBS",
-    "description": "",
+    "title": "MegaTravel",
+    "owner": "Marina, Milan, Filip",
+    "description": "MegaTravel is a multinational travel organization company. Our mission is to help you plan and experience the ultimate vacation. We cover a wide range of services including:\n• Accommodation reservation, where we choose the most suitable accommodation for your trip.\n• Transportation, where we find the best deals to get you to your dream destination.\n• Vacation planning, where we schedule excursions, rent vehicles, prepare parties and perform various services\nwe would really give you the best possible experience.",
     "id": 0
   },
   "detail": {
@@ -1323,8 +1323,8 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "8c5e9c5e-229d-4f73-b4ce-8c6a9756562f",
             "zIndex": -1,
+            "id": "8c5e9c5e-229d-4f73-b4ce-8c6a9756562f",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "Trust Boundary",
@@ -1346,8 +1346,8 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "e0c28561-d1af-4cef-abed-3dbd6b36f8b5",
             "zIndex": -1,
+            "id": "e0c28561-d1af-4cef-abed-3dbd6b36f8b5",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "Trust Boundary",
@@ -1373,8 +1373,8 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "cb29711c-05be-4998-bf80-cc5a359edb1d",
             "zIndex": -1,
+            "id": "cb29711c-05be-4998-bf80-cc5a359edb1d",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "Trust Boundary",
@@ -1400,8 +1400,8 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "683199a1-f498-4e7a-90a4-10b620c60eae",
             "zIndex": -1,
+            "id": "683199a1-f498-4e7a-90a4-10b620c60eae",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "Trust Boundary",
@@ -1537,11 +1537,25 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": [],
+              "threats": [
+                {
+                  "id": "f4ffae04-2bc1-4e10-9ecc-253a1e6486e8",
+                  "title": "Unauthorized Access to Config Secrets",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "Osetljivi podaci se čuvaju u običnom (plain-text) formatu. Napadač kroz ranjivost aplikacije čita konfiguracioni fajl i dobija sistemske tajne.",
+                  "mitigation": "1. Ograničavanje prava pristupa (File Permissions) na OS nivou.\n2. Premeštanje osetljivih tajni iz fajlova u sistemske Environment varijable.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 11,
+                  "score": ""
+                }
+              ],
               "threatFrequency": {
                 "tampering": 0,
                 "repudiation": 0,
-                "informationDisclosure": 0,
+                "informationDisclosure": 1,
                 "denialOfService": 0
               }
             }
@@ -1663,7 +1677,55 @@
               "handlesGoodsOrServices": false,
               "isWebApplication": false,
               "privilegeLevel": "",
-              "threats": []
+              "threats": [
+                {
+                  "id": "006ca689-149d-4738-9461-57522231fde4",
+                  "title": "Unauthorized Admin Access via SSH",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Elevation of privilege",
+                  "description": "Napadač pokušava da podigne svoje privilegije i dobije pun administrativni pristup infrastrukturi Web Servera probijanjem SSH lozinke.",
+                  "mitigation": "1. Potpuno onemogućiti prijavu lozinkom za SSH servis.\n2. Zahtevati autentifikaciju isključivo putem asimetričnih ključeva (RSA/Ed25519).\n3. Konfigurisanje IP Whitelisting-a.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 8,
+                  "score": ""
+                },
+                {
+                  "id": "f02b3548-3a8a-4b4f-89de-48865a737e09",
+                  "title": "HTTP Flood",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Denial of service",
+                  "description": "Napadač šalje ogroman broj lažnih HTTP zahteva na Web Server sa ciljem da iscrpi njegove resurse (CPU, RAM).",
+                  "mitigation": "1. Implementacija Rate Limiting mehanizama po IP adresi na nivou aplikacije.\n2. Postavljanje Web Application Firewall-a (WAF) ispred servera.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 9,
+                  "score": ""
+                },
+                {
+                  "id": "b866d5b2-6ed8-4b98-b76b-0dc9df2f2630",
+                  "title": "Cross-Site Scripting (XSS) in Inputs",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Tampering",
+                  "description": "Napadač šalje zlonamerne skripte kroz formu za pretragu letova, koje server prihvata i izvršava usled nedostatka validacije.",
+                  "mitigation": "1. Sanitizacija i stroga validacija svih ulaznih podataka na backendu (Allow-listing).\n2. Enkodiranje izlaznih podataka prilikom renderovanja.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 10,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 0,
+                "tampering": 1,
+                "repudiation": 0,
+                "informationDisclosure": 0,
+                "denialOfService": 1,
+                "elevationOfPrivilege": 2
+              }
             }
           },
           {
@@ -1787,7 +1849,27 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "6fa821da-276d-44ab-b6b1-81fb884170c9",
+                  "title": "Unauthorized Access to Config Secrets",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Information disclosure",
+                  "description": "Osetljivi podaci se čuvaju u običnom (plain-text) formatu. Napadač kroz ranjivost aplikacije čita konfiguracioni fajl i dobija sistemske tajne.",
+                  "mitigation": "1. Ograničavanje prava pristupa (File Permissions) na OS nivou.\n2. Premeštanje osetljivih tajni iz fajlova u sistemske Environment varijable.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 23,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "repudiation": 0,
+                "informationDisclosure": 2,
+                "denialOfService": 0
+              }
             }
           },
           {
@@ -1907,7 +1989,42 @@
               "handlesGoodsOrServices": false,
               "isWebApplication": false,
               "privilegeLevel": "",
-              "threats": []
+              "threats": [
+                {
+                  "id": "bc1e6c4c-86e4-41e4-a380-1afe9fdef026",
+                  "title": "Inter-Service Privilege Escalation",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Elevation of privilege",
+                  "description": "Napadač koji je kompromitovao jedan manje bitan deo interne mreže pokušava da pošalje direktan API zahtev Payment servisu kako bi odobrio lažnu uplatu, zaobilazeći autorizaciju.",
+                  "mitigation": "1. Implementirati mTLS (Mutual TLS) za svu internu komunikaciju između mikroservisa (servisi moraju međusobno da se autentifikuju sertifikatima).\n2. Prosleđivati i validirati interni JWT token uz svaki zahtev kako bi se proverile role korisnika na nivou svakog servisa.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 24,
+                  "score": ""
+                },
+                {
+                  "id": "944b6c8e-fd2e-4d53-a87e-a72eec9b082d",
+                  "title": "Action Repudiation (No Audit Trail)",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Repudiation",
+                  "description": "Korisnik tvrdi da mu je novac skinut sa kartice, a da nije dobio rezervaciju. Sistem nema dovoljno logova da dokaže tačan sled događaja i ko je inicirao transakciju.",
+                  "mitigation": "1. Implementirati centralizovano, nepromenljivo logovanje (npr. ELK stack - Elasticsearch, Logstash, Kibana).\n2. Svaka akcija mora imati generisan jedinstveni Trace ID koji se prosleđuje kroz sve mikroservise.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 27,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 0,
+                "tampering": 0,
+                "repudiation": 1,
+                "informationDisclosure": 0,
+                "denialOfService": 0,
+                "elevationOfPrivilege": 1
+              }
             }
           },
           {
@@ -2027,7 +2144,42 @@
               "handlesGoodsOrServices": false,
               "isWebApplication": false,
               "privilegeLevel": "",
-              "threats": []
+              "threats": [
+                {
+                  "id": "8f36d69d-f850-40d3-a5cb-cb5fc6d00957",
+                  "title": "Poison Pill Message (Crash)",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Denial of service",
+                  "description": "Napadač šalje namerno nepravilnu poruku. Kada Worker pokuša da je parsira i obradi, dolazi do neobrađenog izuzetka u kodu koji ruši ceo Background Worker proces.",
+                  "mitigation": "1. Implementirati strogu šemu i validaciju poruka pre parsiranja.\n2. Implementirati obrazac Dead Letter Queue (DLQ) – ako Worker ne može da obradi poruku, ona se bezbedno premešta u DLQ umesto da sruši proces, a Worker nastavlja dalje.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 18,
+                  "score": ""
+                },
+                {
+                  "id": "40de3625-94bb-4716-9f61-7a4a7e86e85a",
+                  "title": "Worker Process Over-Privilege",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Elevation of privilege",
+                  "description": "Worker proces se izvršava pod administratorskim (root) nalogom na host operativnom sistemu. Ukoliko napadač kompromituje Worker kroz ranjivost u kodu, dobija kontrolu nad celim serverom.",
+                  "mitigation": "Primeniti princip najmanjih privilegija: Worker aplikacija mora da se izvršava pod posebnim, ograničenim sistemskim korisnikom koji nema sudo/root ovlašćenja.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 19,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 0,
+                "tampering": 0,
+                "repudiation": 0,
+                "informationDisclosure": 0,
+                "denialOfService": 1,
+                "elevationOfPrivilege": 1
+              }
             }
           },
           {
@@ -2147,7 +2299,42 @@
               "handlesGoodsOrServices": false,
               "isWebApplication": false,
               "privilegeLevel": "",
-              "threats": []
+              "threats": [
+                {
+                  "id": "17b33014-e110-4a1d-9c39-7220a9883a85",
+                  "title": "Inter-Service Privilege Escalation",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Elevation of privilege",
+                  "description": "Napadač koji je kompromitovao jedan manje bitan deo interne mreže pokušava da pošalje direktan API zahtev Payment servisu kako bi odobrio lažnu uplatu, zaobilazeći autorizaciju.",
+                  "mitigation": "1. Implementirati mTLS (Mutual TLS) za svu internu komunikaciju između mikroservisa (servisi moraju međusobno da se autentifikuju sertifikatima).\n2. Prosleđivati i validirati interni JWT token uz svaki zahtev kako bi se proverile role korisnika na nivou svakog servisa.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 26,
+                  "score": ""
+                },
+                {
+                  "id": "7ce3a19d-15c2-4d85-a64c-5f42028ae038",
+                  "title": "Action Repudiation (No Audit Trail)",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Repudiation",
+                  "description": "Korisnik tvrdi da mu je novac skinut sa kartice, a da nije dobio rezervaciju. Sistem nema dovoljno logova da dokaže tačan sled događaja i ko je inicirao transakciju.",
+                  "mitigation": "1. Implementirati centralizovano, nepromenljivo logovanje (npr. ELK stack - Elasticsearch, Logstash, Kibana).\n2. Svaka akcija mora imati generisan jedinstveni Trace ID koji se prosleđuje kroz sve mikroservise.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 29,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 0,
+                "tampering": 0,
+                "repudiation": 1,
+                "informationDisclosure": 0,
+                "denialOfService": 0,
+                "elevationOfPrivilege": 1
+              }
             }
           },
           {
@@ -2267,7 +2454,42 @@
               "handlesGoodsOrServices": false,
               "isWebApplication": false,
               "privilegeLevel": "",
-              "threats": []
+              "threats": [
+                {
+                  "id": "4f96b0a7-3e10-4881-989e-90683a1936f0",
+                  "title": "Inter-Service Privilege Escalation",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Elevation of privilege",
+                  "description": "Napadač koji je kompromitovao jedan manje bitan deo interne mreže pokušava da pošalje direktan API zahtev Payment servisu kako bi odobrio lažnu uplatu, zaobilazeći autorizaciju.",
+                  "mitigation": "1. Implementirati mTLS (Mutual TLS) za svu internu komunikaciju između mikroservisa (servisi moraju međusobno da se autentifikuju sertifikatima).\n2. Prosleđivati i validirati interni JWT token uz svaki zahtev kako bi se proverile role korisnika na nivou svakog servisa.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 25,
+                  "score": ""
+                },
+                {
+                  "id": "e1298bae-5b29-4cbb-a3af-f743d9fb1155",
+                  "title": "Action Repudiation (No Audit Trail)",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Repudiation",
+                  "description": "Korisnik tvrdi da mu je novac skinut sa kartice, a da nije dobio rezervaciju. Sistem nema dovoljno logova da dokaže tačan sled događaja i ko je inicirao transakciju.",
+                  "mitigation": "1. Implementirati centralizovano, nepromenljivo logovanje (npr. ELK stack - Elasticsearch, Logstash, Kibana). 2. Svaka akcija mora imati generisan jedinstveni Trace ID koji se prosleđuje kroz sve mikroservise.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 28,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 0,
+                "tampering": 0,
+                "repudiation": 1,
+                "informationDisclosure": 0,
+                "denialOfService": 0,
+                "elevationOfPrivilege": 1
+              }
             }
           },
           {
@@ -2391,7 +2613,27 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "85dfafd9-2a94-449d-9e03-9074f1fe5f8a",
+                  "title": "Unauthorized Access to Config Secrets",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Information disclosure",
+                  "description": "Osetljivi podaci se čuvaju u običnom (plain-text) formatu. Napadač kroz ranjivost aplikacije čita konfiguracioni fajl i dobija sistemske tajne.",
+                  "mitigation": "1. Ograničavanje prava pristupa (File Permissions) na OS nivou.\n2. Premeštanje osetljivih tajni iz fajlova u sistemske Environment varijable.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 21,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "repudiation": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
             }
           },
           {
@@ -2515,7 +2757,27 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "ede5e979-c855-4aa6-aef0-bd8d216b935d",
+                  "title": "Unauthorized Access to Config Secrets",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Information disclosure",
+                  "description": "Osetljivi podaci se čuvaju u običnom (plain-text) formatu. Napadač kroz ranjivost aplikacije čita konfiguracioni fajl i dobija sistemske tajne.",
+                  "mitigation": "1. Ograničavanje prava pristupa (File Permissions) na OS nivou.\n2. Premeštanje osetljivih tajni iz fajlova u sistemske Environment varijable.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 22,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "repudiation": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
             }
           },
           {
@@ -2531,9 +2793,9 @@
               "isTrustBoundary": true,
               "hasOpenThreats": false,
               "crossingFlows": [
+                "7fd2f044-877a-41c3-8ad8-248c3232b5d0",
                 "fea12561-4fee-430e-bd18-11798b066231",
-                "612e8f2b-b0d3-4984-8ec6-29a6eb851dc1",
-                "7fd2f044-877a-41c3-8ad8-248c3232b5d0"
+                "612e8f2b-b0d3-4984-8ec6-29a6eb851dc1"
               ],
               "containedElements": [
                 "6767c475-7acd-4093-a360-b215ebe97d2b",
@@ -2619,8 +2881,8 @@
               "isTrustBoundary": true,
               "hasOpenThreats": false,
               "crossingFlows": [
-                "d175c145-0f9e-414d-a4e5-fd00b7d397a9",
-                "8e327357-cc2f-4c67-b68e-70ab1b06a4cd"
+                "8e327357-cc2f-4c67-b68e-70ab1b06a4cd",
+                "d175c145-0f9e-414d-a4e5-fd00b7d397a9"
               ],
               "containedElements": [
                 "342655b0-2146-4908-aee7-3ebb0a09de8e"
@@ -2648,55 +2910,6 @@
                 "y": 430
               }
             ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Message",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "b6c5dc46-2dfb-4771-9be4-b80d90babd46"
-              ]
-            },
-            "labels": [
-              "Message"
-            ],
-            "id": "d175c145-0f9e-414d-a4e5-fd00b7d397a9",
-            "source": {
-              "cell": "342655b0-2146-4908-aee7-3ebb0a09de8e",
-              "port": "e2d1a1f6-9370-4584-a7fc-f95be19448c0"
-            },
-            "target": {
-              "cell": "d1b3cef2-bcfe-4ece-b6b2-3041fec60593",
-              "port": "62afa8f3-37e3-4ef1-8eb1-b25e4159c7c8"
-            },
-            "vertices": []
           },
           {
             "shape": "trust-boundary-curve",
@@ -3037,354 +3250,6 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Queries",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "e0c28561-d1af-4cef-abed-3dbd6b36f8b5"
-              ]
-            },
-            "labels": [
-              "Queries"
-            ],
-            "id": "ed26e301-b524-4bf9-b9c1-61b518ac7f28",
-            "source": {
-              "cell": "1b3b4f04-af34-4df3-9055-295c08611703",
-              "port": "c9fb76de-07f9-49c8-9ea2-6f03e0d54476"
-            },
-            "target": {
-              "cell": "d3e731d0-704b-4f52-9765-72d6440a83ab",
-              "port": "723114a6-bbcc-4f21-ac6b-fbe826c1aee7"
-            },
-            "vertices": []
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": "block"
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Queries",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "683199a1-f498-4e7a-90a4-10b620c60eae"
-              ]
-            },
-            "labels": [
-              "Queries"
-            ],
-            "id": "5abc79b7-f47d-4489-9aca-0b0e4ae150b3",
-            "source": {
-              "cell": "7e41506c-fe84-4e59-92fa-40ca9f48a525",
-              "port": "9675909e-18db-4c76-866c-b3b21ce9add9"
-            },
-            "target": {
-              "cell": "746b45d4-2afe-417f-8fdd-344d69d7fe8c",
-              "port": "723114a6-bbcc-4f21-ac6b-fbe826c1aee7"
-            },
-            "vertices": []
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": "block"
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Queries",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "cb29711c-05be-4998-bf80-cc5a359edb1d"
-              ]
-            },
-            "labels": [
-              "Queries"
-            ],
-            "id": "c7f59d99-dd44-454c-8db7-1f1431555dcd",
-            "source": {
-              "cell": "19f729e9-c71d-443b-afa3-2dc1820c0e1b",
-              "port": "9675909e-18db-4c76-866c-b3b21ce9add9"
-            },
-            "target": {
-              "cell": "904a779d-53c9-4451-9bdc-19a6a26b8b1d",
-              "port": "723114a6-bbcc-4f21-ac6b-fbe826c1aee7"
-            },
-            "vertices": []
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": "block"
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "REST API Call",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "d0db1844-dee6-4c5e-80e6-cee57fe87fdd"
-              ]
-            },
-            "labels": [
-              "REST API Call"
-            ],
-            "id": "48d5ce15-f2cb-435b-9a7c-ebac38c0c0be",
-            "source": {
-              "cell": "d3e731d0-704b-4f52-9765-72d6440a83ab",
-              "port": "723114a6-bbcc-4f21-ac6b-fbe826c1aee7"
-            },
-            "target": {
-              "cell": "42a25b7f-083b-4300-a79b-e788d8333083",
-              "port": "d81a166e-33a4-44e6-b7ae-7c21e3830110"
-            },
-            "vertices": [
-              {
-                "x": 880,
-                "y": 290
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": "block"
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "REST API Call",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "165b2c7f-8904-4508-b7be-7ed63da0735c"
-              ]
-            },
-            "labels": [
-              "REST API Call"
-            ],
-            "id": "ea5fce1e-2a0a-4e76-9318-530270eea7d5",
-            "source": {
-              "cell": "746b45d4-2afe-417f-8fdd-344d69d7fe8c",
-              "port": "f91d6aac-2355-4278-bb72-cef37332f185"
-            },
-            "target": {
-              "cell": "c02a84e2-7536-439d-84ed-41b30a6a3709",
-              "port": "eed9abc5-c174-4197-a191-67ed1114816f"
-            },
-            "vertices": []
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": "block"
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "HTTPS Req/Res",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "993ed0c8-7b1c-4efe-ac76-fd95212caca8"
-              ]
-            },
-            "labels": [
-              "HTTPS Req/Res"
-            ],
-            "id": "fea12561-4fee-430e-bd18-11798b066231",
-            "source": {
-              "cell": "4f5687a4-a2fe-4412-b6e4-fc78c586cf73",
-              "port": "620d31ff-298f-4faf-a9d0-b212cfd34f76"
-            },
-            "target": {
-              "cell": "55ccd0f7-72b9-4dbf-8ba5-490ea608c53e",
-              "port": "62afa8f3-37e3-4ef1-8eb1-b25e4159c7c8"
-            },
-            "vertices": []
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "SSH Command",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "993ed0c8-7b1c-4efe-ac76-fd95212caca8"
-              ]
-            },
-            "labels": [
-              "SSH Command"
-            ],
-            "id": "612e8f2b-b0d3-4984-8ec6-29a6eb851dc1",
-            "source": {
-              "cell": "2b6fbc53-d6b7-49ea-83a3-ef54a3c7273a",
-              "port": "78a7d12b-d583-4e8e-8ba4-267773ec44e6"
-            },
-            "target": {
-              "cell": "55ccd0f7-72b9-4dbf-8ba5-490ea608c53e",
-              "port": "62afa8f3-37e3-4ef1-8eb1-b25e4159c7c8"
-            },
-            "vertices": []
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": "block"
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
               "name": "API Req/Res",
               "description": "",
               "outOfScope": false,
@@ -3526,55 +3391,6 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "New Booking Msg",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": [],
-              "trustBoundaryIds": [
-                "b6c5dc46-2dfb-4771-9be4-b80d90babd46"
-              ]
-            },
-            "labels": [
-              "New Booking Msg"
-            ],
-            "id": "8e327357-cc2f-4c67-b68e-70ab1b06a4cd",
-            "source": {
-              "cell": "55ccd0f7-72b9-4dbf-8ba5-490ea608c53e",
-              "port": "f91d6aac-2355-4278-bb72-cef37332f185"
-            },
-            "target": {
-              "cell": "342655b0-2146-4908-aee7-3ebb0a09de8e",
-              "port": "c9fb76de-07f9-49c8-9ea2-6f03e0d54476"
-            },
-            "vertices": []
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
               "name": "Booking\nPayload",
               "description": "",
               "outOfScope": false,
@@ -3684,10 +3500,29 @@
               "isEncrypted": false,
               "isPublicNetwork": false,
               "protocol": "",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "e0732cae-cc35-4256-a634-26cf2dcc712b",
+                  "title": "Man-in-the-Middle (MitM) Data Interception",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "Napadač presreće mrežni saobraćaj na internetu između klijenta i Web Servera kako bi pročitao osetljive podatke poput sesijskih kolačića ili JWT tokena.",
+                  "mitigation": "1. Forsiranje isključivo TLS 1.2 i TLS 1.3 protokola na serveru.\n2. Implementacija HSTS (HTTP Strict Transport Security) zaglavlja (npr. kroz Spring Security konfiguraciju).\n3. Postavljanje Secure i HttpOnly flegova na sve kolačiće.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 6,
+                  "score": ""
+                }
+              ],
               "trustBoundaryIds": [
                 "993ed0c8-7b1c-4efe-ac76-fd95212caca8"
-              ]
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
             },
             "labels": [
               "HTTPS Req/Res"
@@ -3700,6 +3535,623 @@
             "target": {
               "cell": "55ccd0f7-72b9-4dbf-8ba5-490ea608c53e",
               "port": "62afa8f3-37e3-4ef1-8eb1-b25e4159c7c8"
+            },
+            "vertices": []
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "HTTPS Req/Res",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "0d3b733f-f937-4226-9ec2-90aef7c9f292",
+                  "title": "Man-in-the-Middle (MitM) Data Interception",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "Napadač presreće mrežni saobraćaj na internetu između klijenta i Web Servera kako bi pročitao osetljive podatke poput sesijskih kolačića ili JWT tokena.",
+                  "mitigation": "1. Forsiranje isključivo TLS 1.2 i TLS 1.3 protokola na serveru.\n2. Implementacija HSTS (HTTP Strict Transport Security) zaglavlja (npr. kroz Spring Security konfiguraciju).\n3. Postavljanje Secure i HttpOnly flegova na sve kolačiće.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 7,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "993ed0c8-7b1c-4efe-ac76-fd95212caca8"
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "HTTPS Req/Res"
+            ],
+            "id": "fea12561-4fee-430e-bd18-11798b066231",
+            "source": {
+              "cell": "4f5687a4-a2fe-4412-b6e4-fc78c586cf73",
+              "port": "620d31ff-298f-4faf-a9d0-b212cfd34f76"
+            },
+            "target": {
+              "cell": "55ccd0f7-72b9-4dbf-8ba5-490ea608c53e",
+              "port": "62afa8f3-37e3-4ef1-8eb1-b25e4159c7c8"
+            },
+            "vertices": []
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "SSH Command",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "32a6c46d-55ca-4ba1-b2df-e2377412771e",
+                  "title": "SSH Downgrade / MitM Attack",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "Napadač presreće mrežni saobraćaj i pokušava takozvani Downgrade napad, terajući klijenta i server da koriste zastarele i ranjive algoritme za enkripciju kako bi pročitao komande koje Admin šalje.",
+                  "mitigation": "Konfigurisati SSH daemon (servis) na serveru da prihvata isključivo najnovije, jake algoritme za enkripciju (Ciphers) i MAC algoritme, i potpuno isključiti podršku za starije SSHv1 protokole.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 13,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "993ed0c8-7b1c-4efe-ac76-fd95212caca8"
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "SSH Command"
+            ],
+            "id": "612e8f2b-b0d3-4984-8ec6-29a6eb851dc1",
+            "source": {
+              "cell": "2b6fbc53-d6b7-49ea-83a3-ef54a3c7273a",
+              "port": "78a7d12b-d583-4e8e-8ba4-267773ec44e6"
+            },
+            "target": {
+              "cell": "55ccd0f7-72b9-4dbf-8ba5-490ea608c53e",
+              "port": "62afa8f3-37e3-4ef1-8eb1-b25e4159c7c8"
+            },
+            "vertices": []
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "New Booking Msg",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "9e95ba1d-e868-469f-bf34-e97a5b812dce",
+                  "title": "In-Transit Booking Data Sniffing",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Information disclosure",
+                  "description": "Poruke putuju kroz internu mrežu u običnom tekstu. Napadač koji prisluškuje internu mrežu može da pročita osetljive podatke klijenata.",
+                  "mitigation": "Forsirati TLS enkripciju za sav interni saobraćaj između mikroservisa i Message Queue brokera (tzv. In-transit encryption).",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 16,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "b6c5dc46-2dfb-4771-9be4-b80d90babd46"
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "New Booking Msg"
+            ],
+            "id": "8e327357-cc2f-4c67-b68e-70ab1b06a4cd",
+            "source": {
+              "cell": "55ccd0f7-72b9-4dbf-8ba5-490ea608c53e",
+              "port": "f91d6aac-2355-4278-bb72-cef37332f185"
+            },
+            "target": {
+              "cell": "342655b0-2146-4908-aee7-3ebb0a09de8e",
+              "port": "c9fb76de-07f9-49c8-9ea2-6f03e0d54476"
+            },
+            "vertices": []
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Message",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "122bebb4-597c-40c7-8707-3c496dede308",
+                  "title": "In-Transit Booking Data Sniffing",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Information disclosure",
+                  "description": "Poruke putuju kroz internu mrežu u običnom tekstu. Napadač koji prisluškuje internu mrežu može da pročita osetljive podatke klijenata.",
+                  "mitigation": "Forsirati TLS enkripciju za sav interni saobraćaj između mikroservisa i Message Queue brokera (tzv. In-transit encryption).",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 17,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "b6c5dc46-2dfb-4771-9be4-b80d90babd46"
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "Message"
+            ],
+            "id": "d175c145-0f9e-414d-a4e5-fd00b7d397a9",
+            "source": {
+              "cell": "342655b0-2146-4908-aee7-3ebb0a09de8e",
+              "port": "e2d1a1f6-9370-4584-a7fc-f95be19448c0"
+            },
+            "target": {
+              "cell": "d1b3cef2-bcfe-4ece-b6b2-3041fec60593",
+              "port": "62afa8f3-37e3-4ef1-8eb1-b25e4159c7c8"
+            },
+            "vertices": []
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Queries",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "ea443e1c-16c1-4cbc-96be-fbdcca476540",
+                  "title": "Database Query Tampering (SQL Injection)",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Tampering",
+                  "description": "Napadač kroz ulazne podatke provlači maliciozni SQL kod koji menja strukturu upita. Servis prosleđuje taj upit bazi, što rezultira brisanjem tabela ili neovlašćenom izmenom tuđih rezervacija.",
+                  "mitigation": "1. Striktno korišćenje Prepared Statements (Parametrizovanih upita).\n2. Korišćenje proverenih ORM (Object-Relational Mapping) frejmvorka poput Hibernate-a (u Spring Boot-u) koji automatski štite od SQL injekcija izbegavanjem direktne konkatenacije stringova.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 33,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "683199a1-f498-4e7a-90a4-10b620c60eae"
+              ],
+              "threatFrequency": {
+                "tampering": 1,
+                "informationDisclosure": 0,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "Queries"
+            ],
+            "id": "5abc79b7-f47d-4489-9aca-0b0e4ae150b3",
+            "source": {
+              "cell": "7e41506c-fe84-4e59-92fa-40ca9f48a525",
+              "port": "9675909e-18db-4c76-866c-b3b21ce9add9"
+            },
+            "target": {
+              "cell": "746b45d4-2afe-417f-8fdd-344d69d7fe8c",
+              "port": "723114a6-bbcc-4f21-ac6b-fbe826c1aee7"
+            },
+            "vertices": []
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Queries",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "4ec36dd6-e0b7-4b37-a124-f37eccbf7a70",
+                  "title": "Database Query Tampering (SQL Injection)",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Tampering",
+                  "description": "Napadač kroz ulazne podatke provlači maliciozni SQL kod koji menja strukturu upita. Servis prosleđuje taj upit bazi, što rezultira brisanjem tabela ili neovlašćenom izmenom tuđih rezervacija.",
+                  "mitigation": "1. Striktno korišćenje Prepared Statements (Parametrizovanih upita).\n2. Korišćenje proverenih ORM (Object-Relational Mapping) frejmvorka poput Hibernate-a (u Spring Boot-u) koji automatski štite od SQL injekcija izbegavanjem direktne konkatenacije stringova.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 34,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "e0c28561-d1af-4cef-abed-3dbd6b36f8b5"
+              ],
+              "threatFrequency": {
+                "tampering": 1,
+                "informationDisclosure": 0,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "Queries"
+            ],
+            "id": "ed26e301-b524-4bf9-b9c1-61b518ac7f28",
+            "source": {
+              "cell": "1b3b4f04-af34-4df3-9055-295c08611703",
+              "port": "c9fb76de-07f9-49c8-9ea2-6f03e0d54476"
+            },
+            "target": {
+              "cell": "d3e731d0-704b-4f52-9765-72d6440a83ab",
+              "port": "723114a6-bbcc-4f21-ac6b-fbe826c1aee7"
+            },
+            "vertices": []
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Queries",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "a0c27e50-9ac9-43fb-8bc9-8189483eb382",
+                  "title": "Database Query Tampering (SQL Injection)",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Tampering",
+                  "description": "Napadač kroz ulazne podatke provlači maliciozni SQL kod koji menja strukturu upita. Servis prosleđuje taj upit bazi, što rezultira brisanjem tabela ili neovlašćenom izmenom tuđih rezervacija.",
+                  "mitigation": ". Striktno korišćenje Prepared Statements (Parametrizovanih upita).\n2. Korišćenje proverenih ORM (Object-Relational Mapping) frejmvorka poput Hibernate-a (u Spring Boot-u) koji automatski štite od SQL injekcija izbegavanjem direktne konkatenacije stringova.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 35,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "cb29711c-05be-4998-bf80-cc5a359edb1d"
+              ],
+              "threatFrequency": {
+                "tampering": 1,
+                "informationDisclosure": 0,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "Queries"
+            ],
+            "id": "c7f59d99-dd44-454c-8db7-1f1431555dcd",
+            "source": {
+              "cell": "19f729e9-c71d-443b-afa3-2dc1820c0e1b",
+              "port": "9675909e-18db-4c76-866c-b3b21ce9add9"
+            },
+            "target": {
+              "cell": "904a779d-53c9-4451-9bdc-19a6a26b8b1d",
+              "port": "723114a6-bbcc-4f21-ac6b-fbe826c1aee7"
+            },
+            "vertices": []
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "REST API Call",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "a1835cde-3f92-4268-9ff4-09efb82f3217",
+                  "title": "API Key Leakage / Eavesdropping",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "MegaTravel komunicira sa avio-kompanijama preko API-ja. Napadač presreće ovaj saobraćaj kako bi pročitao odgovore partnera ili ukrao tajne API ključeve koje MegaTravel koristi za autentifikaciju ka njima.",
+                  "mitigation": "1. Sva komunikacija sa eksternim partnerima mora ići isključivo preko TLS 1.2+ konekcija.\n2. Tajni API ključevi za partnere se ne smeju hardkodovati, već moraju biti bezbedno čuvani i ubačeni u vreme izvršavanja aplikacije.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 37,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "d0db1844-dee6-4c5e-80e6-cee57fe87fdd"
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "REST API Call"
+            ],
+            "id": "48d5ce15-f2cb-435b-9a7c-ebac38c0c0be",
+            "source": {
+              "cell": "d3e731d0-704b-4f52-9765-72d6440a83ab",
+              "port": "723114a6-bbcc-4f21-ac6b-fbe826c1aee7"
+            },
+            "target": {
+              "cell": "42a25b7f-083b-4300-a79b-e788d8333083",
+              "port": "d81a166e-33a4-44e6-b7ae-7c21e3830110"
+            },
+            "vertices": [
+              {
+                "x": 880,
+                "y": 290
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "REST API Call",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": [
+                {
+                  "id": "b6f5f4af-aefe-4a02-a68e-352f5a055f22",
+                  "title": "API Key Leakage / Eavesdropping",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "MegaTravel komunicira sa avio-kompanijama preko API-ja. Napadač presreće ovaj saobraćaj kako bi pročitao odgovore partnera ili ukrao tajne API ključeve koje MegaTravel koristi za autentifikaciju ka njima",
+                  "mitigation": "1. Sva komunikacija sa eksternim partnerima mora ići isključivo preko TLS 1.2+ konekcija.\n2. Tajni API ključevi za partnere se ne smeju hardkodovati, već moraju biti bezbedno čuvani i ubačeni u vreme izvršavanja aplikacije.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 38,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "165b2c7f-8904-4508-b7be-7ed63da0735c"
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
+            },
+            "labels": [
+              "REST API Call"
+            ],
+            "id": "ea5fce1e-2a0a-4e76-9318-530270eea7d5",
+            "source": {
+              "cell": "746b45d4-2afe-417f-8fdd-344d69d7fe8c",
+              "port": "f91d6aac-2355-4278-bb72-cef37332f185"
+            },
+            "target": {
+              "cell": "c02a84e2-7536-439d-84ed-41b30a6a3709",
+              "port": "eed9abc5-c174-4197-a191-67ed1114816f"
             },
             "vertices": []
           },
@@ -3824,7 +4276,27 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "9743a25f-4bb0-4566-883a-e8e0ed93c2bd",
+                  "title": "Unauthorized Access to Config Secrets",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Information disclosure",
+                  "description": "Osetljivi podaci se čuvaju u običnom (plain-text) formatu. Napadač kroz ranjivost aplikacije čita konfiguracioni fajl i dobija sistemske tajne.",
+                  "mitigation": "1. Ograničavanje prava pristupa (File Permissions) na OS nivou.\n2. Premeštanje osetljivih tajni iz fajlova u sistemske Environment varijable.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 20,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "repudiation": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
             }
           },
           {
@@ -3941,7 +4413,25 @@
               "reasonOutOfScope": "",
               "hasOpenThreats": false,
               "providesAuthentication": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "38732483-2061-49b8-9c24-4465abdeedf0",
+                  "title": "Account Takeover via Credential Stuffing",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Spoofing",
+                  "description": "Napadač se lažno predstavlja kao legitimni korisnik (Customer/Employee) pogađanjem lozinki (Brute-force) ili korišćenjem ranije procurelih kredencijala.",
+                  "mitigation": "1. Implementacija Multi-Factor Authentication (MFA).\n2. Uvođenje strogih polisa za kompleksnost lozinki.\n3. Ograničavanje broja pokušaja logovanja (Rate limiting) na login ruti.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 4,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 1,
+                "repudiation": 0
+              }
             }
           },
           {
@@ -4058,7 +4548,25 @@
               "reasonOutOfScope": "",
               "hasOpenThreats": false,
               "providesAuthentication": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "d0fa4480-5fbf-45e3-be65-3bbee02faff4",
+                  "title": "Admin Spoofing via Compromised Key",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Spoofing",
+                  "description": "Napadač dolazi u posed privatnog SSH ključa administratora (npr. krađom sa njegovog laptopa) i prijavljuje se na sistem predstavljajući se kao legitiman Admin.",
+                  "mitigation": "1. Zaštititi sve privatne SSH ključeve jakom lozinkom (Passphrase).\n2. Uvesti IP Whitelisting (dozvoliti SSH pristup isključivo sa statičkih IP adresa iz kancelarije ili preko VPN-a).",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 12,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 1,
+                "repudiation": 0
+              }
             }
           },
           {
@@ -4182,7 +4690,27 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "8bb92503-33c2-42a3-960b-bba79080e563",
+                  "title": "Data at Rest Theft (Data Breach)",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Information disclosure",
+                  "description": "Napadač uspeva da dobije pristup samom fajl sistemu servera baze podataka ili ukrade bekap fajlove baze (Backup), čime dolazi do svih ličnih podataka klijenata i brojeva kartica.",
+                  "mitigation": "1. Implementirati Encryption at Rest (enkripciju podataka u mirovanju) na nivou diska ili same baze (TDE - Transparent Data Encryption).\n2. Lozinke hešovati pomoću snažnih algoritama (npr. Bcrypt/Argon2).\n3. Brojeve kreditnih kartica nikada ne čuvati u čistom formatu, već koristiti Tokenizaciju.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 32,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "repudiation": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
             }
           },
           {
@@ -4306,7 +4834,27 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "418caa7e-d675-4d3d-b792-e9a979d01f34",
+                  "title": "Data at Rest Theft (Data Breach)",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Information disclosure",
+                  "description": "Napadač uspeva da dobije pristup samom fajl sistemu servera baze podataka ili ukrade bekap fajlove baze (Backup), čime dolazi do svih ličnih podataka klijenata i brojeva kartica.",
+                  "mitigation": "1. Implementirati Encryption at Rest (enkripciju podataka u mirovanju) na nivou diska ili same baze (TDE - Transparent Data Encryption).\n2. Lozinke hešovati pomoću snažnih algoritama (npr. Bcrypt/Argon2).\n3. Brojeve kreditnih kartica nikada ne čuvati u čistom formatu, već koristiti Tokenizaciju.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 30,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "repudiation": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
             }
           },
           {
@@ -4333,6 +4881,7 @@
             },
             "visible": true,
             "shape": "store",
+            "zIndex": 18,
             "ports": {
               "groups": {
                 "top": {
@@ -4416,7 +4965,6 @@
               ]
             },
             "id": "342655b0-2146-4908-aee7-3ebb0a09de8e",
-            "zIndex": 18,
             "data": {
               "type": "tm.Store",
               "name": "Message Queue",
@@ -4430,7 +4978,40 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "27ad1ff1-03b8-4f96-9929-028eb852d253",
+                  "title": "Message Tampering (Booking Manipulation)",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Tampering",
+                  "description": "Napadač koji je kompromitovao Web Server direktno menja poruke dok čekaju u redu (npr. menja cenu rezervacije na 0 ili menja ID korisnika).",
+                  "mitigation": "1. Uvesti autentifikaciju i autorizaciju za pristup samom Message Queue servisu (npr. RabbitMQ ili Kafka).\n2. Podaci (Payload) u poruci mogu biti digitalno potpisani (HMAC) od strane Web Servera kako bi Worker proverio integritet pre obrade.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 14,
+                  "score": ""
+                },
+                {
+                  "id": "50b38dc4-ee56-4a12-a48e-402edbb4806d",
+                  "title": "Message Queue Flooding (DoS)",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Denial of service",
+                  "description": "Napadač zatrpava Message Queue milionima lažnih poruka o rezervacijama, iscrpljujući memoriju Queue-a i onemogućavajući obradu legitimnih rezervacija.",
+                  "mitigation": "1. Postaviti stroge limite na veličinu reda i veličinu pojedinačne poruke u konfiguraciji Queue servisa.\n2. Uvesti monitoring alate (poput Prometheus/Grafana) koji će alarmirati administratore pri naglom skoku broja poruka.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 15,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "tampering": 1,
+                "repudiation": 0,
+                "informationDisclosure": 0,
+                "denialOfService": 1
+              }
             }
           },
           {
@@ -4454,6 +5035,7 @@
             },
             "visible": true,
             "shape": "actor",
+            "zIndex": 19,
             "ports": {
               "groups": {
                 "top": {
@@ -4537,7 +5119,6 @@
               ]
             },
             "id": "4f5687a4-a2fe-4412-b6e4-fc78c586cf73",
-            "zIndex": 19,
             "data": {
               "type": "tm.Actor",
               "name": "Employee\n(Browser)",
@@ -4547,7 +5128,25 @@
               "reasonOutOfScope": "",
               "hasOpenThreats": false,
               "providesAuthentication": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "194b2788-c521-4d40-8709-82bb857cb2f1",
+                  "title": "Account Takeover via Credential Stuffing",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Spoofing",
+                  "description": "Napadač se lažno predstavlja kao legitimni korisnik (Customer/Employee) pogađanjem lozinki (Brute-force) ili korišćenjem ranije procurelih kredencijala.",
+                  "mitigation": "1. Implementacija Multi-Factor Authentication (MFA).\n2. Uvođenje strogih polisa za kompleksnost lozinki.\n3. Ograničavanje broja pokušaja logovanja (Rate limiting) na login ruti.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 5,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 1,
+                "repudiation": 0
+              }
             }
           },
           {
@@ -4574,6 +5173,7 @@
             },
             "visible": true,
             "shape": "store",
+            "zIndex": 20,
             "ports": {
               "groups": {
                 "top": {
@@ -4657,7 +5257,6 @@
               ]
             },
             "id": "1b3b4f04-af34-4df3-9055-295c08611703",
-            "zIndex": 20,
             "data": {
               "type": "tm.Store",
               "name": "Payment DB",
@@ -4671,7 +5270,27 @@
               "isSigned": false,
               "storesCredentials": false,
               "storesInventory": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "a395fb84-5865-4eb5-8b58-b6a27bb1e723",
+                  "title": "Data at Rest Theft (Data Breach)",
+                  "status": "Mitigated",
+                  "severity": "Critical",
+                  "type": "Information disclosure",
+                  "description": "Napadač uspeva da dobije pristup samom fajl sistemu servera baze podataka ili ukrade bekap fajlove baze (Backup), čime dolazi do svih ličnih podataka klijenata i brojeva kartica.",
+                  "mitigation": "1. Implementirati Encryption at Rest (enkripciju podataka u mirovanju) na nivou diska ili same baze (TDE - Transparent Data Encryption).\n2. Lozinke hešovati pomoću snažnih algoritama (npr. Bcrypt/Argon2).\n3. Brojeve kreditnih kartica nikada ne čuvati u čistom formatu, već koristiti Tokenizaciju.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 31,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "tampering": 0,
+                "repudiation": 0,
+                "informationDisclosure": 1,
+                "denialOfService": 0
+              }
             }
           },
           {
@@ -4695,6 +5314,7 @@
             },
             "visible": true,
             "shape": "actor",
+            "zIndex": 21,
             "ports": {
               "groups": {
                 "top": {
@@ -4778,7 +5398,6 @@
               ]
             },
             "id": "42a25b7f-083b-4300-a79b-e788d8333083",
-            "zIndex": 21,
             "data": {
               "type": "tm.Actor",
               "name": "Payment Gateway",
@@ -4788,7 +5407,25 @@
               "reasonOutOfScope": "",
               "hasOpenThreats": false,
               "providesAuthentication": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "18dc3a97-4048-4fa1-b238-7cd1440cc1d9",
+                  "title": "Partner Webhook Spoofing",
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Spoofing",
+                  "description": "Napadač lažira povratni zahtev (Webhook) predstavljajući se kao Payment Gateway (npr. Stripe) i šalje MegaTravel sistemu poruku \"Uplata je uspešna\" kako bi dobio besplatno putovanje.",
+                  "mitigation": "1. Obavezna validacija kriptografskog potpisa (Webhook Signature) koji Payment Gateway šalje u zaglavlju (Header-u) zahteva.\n2. Postavljanje IP Whitelisting-a kako bi se prihvatio saobraćaj samo sa zvaničnih IP adresa partnera.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 36,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 1,
+                "repudiation": 0
+              }
             }
           },
           {
@@ -4812,6 +5449,7 @@
             },
             "visible": true,
             "shape": "actor",
+            "zIndex": 22,
             "ports": {
               "groups": {
                 "top": {
@@ -4895,7 +5533,6 @@
               ]
             },
             "id": "c02a84e2-7536-439d-84ed-41b30a6a3709",
-            "zIndex": 22,
             "data": {
               "type": "tm.Actor",
               "name": "Travel Partners",
@@ -4905,14 +5542,32 @@
               "reasonOutOfScope": "",
               "hasOpenThreats": false,
               "providesAuthentication": false,
-              "threats": []
+              "threats": [
+                {
+                  "id": "82e1edba-4850-469f-a8f5-50e7bdeab350",
+                  "title": "Partner Booking Repudiation",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Repudiation",
+                  "description": "Eksterni partner (npr. hotel ili avio-kompanija) tvrdi da nikada nije primio API zahtev za rezervaciju od MegaTravel-a, ili negira da je potvrdio smeštaj, ostavljajući klijenta bez usluge na destinaciji.",
+                  "mitigation": "1. Čuvanje kompletnih, nepromenljivih (immutable) logova svih API zahteva i odgovora sa partnerima (Audit trails).\n2. Obavezno parsiranje i bezbedno skladištenje jedinstvenog Confirmation ID-ja koji partner vraća u svom API odgovoru kao krunski dokaz uspešne rezervacije.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 39,
+                  "score": ""
+                }
+              ],
+              "threatFrequency": {
+                "spoofing": 0,
+                "repudiation": 1
+              }
             }
           }
         ]
       }
     ],
     "diagramTop": 3,
-    "reviewer": "RBS",
-    "threatTop": 3
+    "reviewer": "",
+    "threatTop": 39
   }
 }
