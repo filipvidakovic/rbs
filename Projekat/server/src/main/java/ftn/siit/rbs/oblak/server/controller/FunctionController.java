@@ -13,7 +13,7 @@ import java.net.URI;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/functions")
+@RequestMapping("/api/functions")
 public class FunctionController {
 
     private static final Logger log = LoggerFactory.getLogger(FunctionController.class);
@@ -55,7 +55,7 @@ public class FunctionController {
         // ── Delegate to service (may throw CodeVerificationException → 422) ───
         String urlHash = functionService.uploadAndRegister(file, requirements);
 
-        String invokeUrl = "/api/v1/functions/" + urlHash + "/invoke";
+        String invokeUrl = "/api/functions/" + urlHash + "/invoke";
         log.info("Function uploaded successfully – hash={}", urlHash);
 
         return ResponseEntity
