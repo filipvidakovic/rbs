@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleVerification(CodeVerificationException ex) {
         log.warn("Code verification failed: {}", ex.getMessage());
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(
-                HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+                HttpStatus.valueOf(422), ex.getMessage());
         pd.setTitle("Code Verification Failed");
         pd.setType(URI.create("https://oblak.edu.rs/errors/verification-failed"));
         return pd;
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ProblemDetail handleFileTooLarge(MaxUploadSizeExceededException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(
-                HttpStatus.PAYLOAD_TOO_LARGE,
+                HttpStatus.valueOf(413),
                 "Uploaded file exceeds the maximum allowed size.");
         pd.setTitle("File Too Large");
         pd.setType(URI.create("https://oblak.edu.rs/errors/file-too-large"));

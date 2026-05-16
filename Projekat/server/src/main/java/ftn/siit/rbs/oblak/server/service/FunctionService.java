@@ -25,6 +25,8 @@ public class FunctionService {
 
     private static final long VERIFIER_TIMEOUT_SECONDS = 30L;
 
+    private static final String DEFAULT_HANDLER_NAME = "handler.py";
+
     // ── Configuration injected from application.properties ───────────────────
 
     @Value("${oblak.storage.base-path}")
@@ -68,7 +70,7 @@ public class FunctionService {
 
         // ── Step 1: Write to a secure temp directory ──────────────────────────
         Path tempDir = createTempDirectory();
-        Path tempScript = tempDir.resolve("handler.py");
+        Path tempScript = tempDir.resolve(DEFAULT_HANDLER_NAME);
 
         try {
             Files.write(tempScript, file.getBytes(), StandardOpenOption.CREATE_NEW);
@@ -82,7 +84,7 @@ public class FunctionService {
             // ── Step 4: Move files to permanent storage ────────────────────────
             Path functionDir = Path.of(basePath, urlHash);
             Files.createDirectories(functionDir);
-            Files.move(tempScript, functionDir.resolve("handler.py"),
+            Files.move(tempScript, functionDir.resolve(DEFAULT_HANDLER_NAME),
                     StandardCopyOption.REPLACE_EXISTING);
 
             if (requirementsFile != null && !requirementsFile.isEmpty()) {
@@ -91,22 +93,16 @@ public class FunctionService {
             }
 
             // ── Step 5: Persist metadata in PostgreSQL ────────────────────────
-            FunctionRecord record = new FunctionRecord(
+            FunctionRecord functionRecord = new FunctionRecord(
                     urlHash,
                     functionDir.toAbsolutePath().toString(),
                     originalName
             );
-            record.setStatus(FunctionRecord.Status.VERIFIED);
-            repository.save(record);
+            functionRecord.setStatus(FunctionRecord.Status.VERIFIED);
+            repository.save(functionRecord);
 
             log.info("Function '{}' registered with hash {}", originalName, urlHash);
             return urlHash;
-
-        } catch (CodeVerificationException ex) {
-            // Mark failure in DB if a pending record was already inserted,
-            // then re-throw so the controller returns 422.
-            log.warn("Verification rejected '{}': {}", originalName, ex.getMessage());
-            throw ex;
 
         } finally {
             // Always clean up the temp directory, even if verification passed
@@ -220,13 +216,13 @@ public class FunctionService {
 
     private String sanitizeFilename(String original) {
         if (original == null || original.isBlank()) {
-            return "handler.py";
+            return DEFAULT_HANDLER_NAME;
         }
         // Keep only the last path component.
         String name = Path.of(original).getFileName().toString();
         // Strip any remaining null bytes.
         name = name.replace("\0", "");
-        return name.isBlank() ? "handler.py" : name;
+        return name.isBlank() ? DEFAULT_HANDLER_NAME : name;
     }
 
     private void deleteSilently(Path dir) {
@@ -235,7 +231,7 @@ public class FunctionService {
                   .forEach(p -> {
                       try { Files.deleteIfExists(p); }
                       catch (IOException ex) {
-                          log.warn("Could not delete temp path {}: {}", p, ex.getMessage());
+                          log.warn("Could not delete temp path", ex);
                       }
                   });
         } catch (IOException ex) {

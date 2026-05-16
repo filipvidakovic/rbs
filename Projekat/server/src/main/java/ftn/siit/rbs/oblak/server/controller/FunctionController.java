@@ -19,6 +19,9 @@ public class FunctionController {
     private static final Logger log = LoggerFactory.getLogger(FunctionController.class);
 
     private static final String HASH_REGEX = "^[a-f0-9]{64}$";
+    
+    private static final String ERROR_KEY = "error";
+    private static final String URL_HASH_KEY = "urlHash";
 
     private final FunctionService functionService;
 
@@ -37,19 +40,19 @@ public class FunctionController {
         // ── Input validation ───────────────────────────────────────────────────
         if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "No file provided or file is empty."));
+                    .body(Map.of(ERROR_KEY, "No file provided or file is empty."));
         }
 
         if (!isPythonFile(file)) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error",
+                    .body(Map.of(ERROR_KEY,
                             "Only Python (.py) files are accepted. "
                             + "Received: " + file.getOriginalFilename()));
         }
 
         if (requirements != null && !isEmpty(requirements) && !isTextFile(requirements)) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "requirements must be a plain-text file."));
+                    .body(Map.of(ERROR_KEY, "requirements must be a plain-text file."));
         }
 
         // ── Delegate to service (may throw CodeVerificationException → 422) ───
@@ -61,7 +64,7 @@ public class FunctionController {
         return ResponseEntity
                 .created(URI.create(invokeUrl))
                 .body(Map.of(
-                        "urlHash",   urlHash,
+                        URL_HASH_KEY,   urlHash,
                         "invokeUrl", invokeUrl
                 ));
     }
@@ -74,13 +77,13 @@ public class FunctionController {
     ) {
         if (!urlHash.matches(HASH_REGEX)) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid function hash format."));
+                    .body(Map.of(ERROR_KEY, "Invalid function hash format."));
         }
 
-        FunctionRecord record = functionService.resolveFunction(urlHash);
+        FunctionRecord functionRecord = functionService.resolveFunction(urlHash);
 
         log.info("Invocation requested for hash={} path={}",
-                urlHash, record.getStoragePath());
+                urlHash, functionRecord.getStoragePath());
 
         // TODO: Send an execution request to the Firecracker Orchestrator service
         //       (e.g. via an internal REST call or a message queue).
@@ -89,8 +92,8 @@ public class FunctionController {
         return ResponseEntity.accepted()
                 .body(Map.of(
                         "status",      "ACCEPTED",
-                        "urlHash",     record.getUrlHash(),
-                        "storagePath", record.getStoragePath(),
+                        URL_HASH_KEY,     functionRecord.getUrlHash(),
+                        "storagePath", functionRecord.getStoragePath(),
                         "message",     "Execution request received. "
                                        + "The Firecracker orchestrator will run your function."
                 ));
@@ -104,17 +107,17 @@ public class FunctionController {
     ) {
         if (!urlHash.matches(HASH_REGEX)) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid function hash format."));
+                    .body(Map.of(ERROR_KEY, "Invalid function hash format."));
         }
 
-        FunctionRecord record = functionService.resolveFunction(urlHash);
+        FunctionRecord functionRecord = functionService.resolveFunction(urlHash);
 
         return ResponseEntity.ok(Map.of(
-                "urlHash",          record.getUrlHash(),
-                "originalFilename", record.getOriginalFilename(),
-                "storagePath",      record.getStoragePath(),
-                "status",           record.getStatus().name(),
-                "createdAt",        record.getCreatedAt().toString()
+                URL_HASH_KEY,          functionRecord.getUrlHash(),
+                "originalFilename", functionRecord.getOriginalFilename(),
+                "storagePath",      functionRecord.getStoragePath(),
+                "status",           functionRecord.getStatus().name(),
+                "createdAt",        functionRecord.getCreatedAt().toString()
         ));
     }
 
