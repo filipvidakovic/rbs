@@ -1,0 +1,23 @@
+{
+  "boot-source": {
+    "kernel_image_path": "/home/user/firecracker-test/vmlinux.bin",
+    "boot_args": "console=ttyS0 reboot=k panic=1 pci=off"
+  },
+  "drives": [
+    {
+      "drive_id": "rootfs",
+      "path_on_host": "/home/user/firecracker-test/bionic.rootfs.ext4",
+      "is_root_device": true,
+      "is_read_only": false
+    }
+  ],
+  "machine-config": {
+    "vcpu_count": 1,
+    "mem_size_mib": 128
+  },
+  "vsock": {
+    "vsock_id": "vsock0",
+    "guest_cid": 3,
+    "uds_path": "./v.sock"
+  }
+}
