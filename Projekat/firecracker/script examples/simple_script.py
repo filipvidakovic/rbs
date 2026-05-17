@@ -1,0 +1,1 @@
+print("nemam gresku")

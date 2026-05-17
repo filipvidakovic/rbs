@@ -92,10 +92,18 @@ public class FunctionService {
                 Files.write(reqDest, requirementsFile.getBytes());
             }
 
-            // ── Step 5: Persist metadata in PostgreSQL ────────────────────────
+            String requirementsPath = null;
+
+            if (requirementsFile != null && !requirementsFile.isEmpty()) {
+                Path reqDest = functionDir.resolve("requirements.txt");
+                Files.write(reqDest, requirementsFile.getBytes());
+                requirementsPath = reqDest.toAbsolutePath().toString();
+            }
+
             FunctionRecord functionRecord = new FunctionRecord(
                     urlHash,
                     functionDir.toAbsolutePath().toString(),
+                    requirementsPath,
                     originalName
             );
             functionRecord.setStatus(FunctionRecord.Status.VERIFIED);
