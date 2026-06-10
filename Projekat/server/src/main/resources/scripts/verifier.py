@@ -91,7 +91,7 @@ def main() -> int:
     # No shell=True – arguments are passed as a list.
 
     cmd = [
-        "bandit",
+        sys.executable, "-m", "bandit",
         "-f", "json",
         "-l",       # include LOW severity
         "-i",       # include LOW confidence
