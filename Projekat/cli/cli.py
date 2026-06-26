@@ -17,6 +17,7 @@ from rich.console import Console
 from oblak.commands.login import login, logout
 from oblak.commands.deploy import deploy
 from oblak.commands.invoke import invoke, status
+from oblak.commands.register import register
 
 console = Console()
 
@@ -40,6 +41,7 @@ cli.add_command(logout)
 cli.add_command(deploy)
 cli.add_command(invoke)
 cli.add_command(status)
+cli.add_command(register)
 
 
 if __name__ == "__main__":
